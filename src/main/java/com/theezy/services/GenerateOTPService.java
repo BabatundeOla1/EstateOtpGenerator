@@ -1,13 +1,14 @@
 package com.theezy.services;
 
 import com.theezy.data.models.GenerateOTP;
+import com.theezy.dtos.response.GenerateOtpResponse;
 
 public interface GenerateOTPService {
 
-    GenerateOTP generateOTP();
-    GenerateOTP findOtpByCode(String otpCode);
+    GenerateOtpResponse generateOTP();
+
 
     Long countCodeInOTPRepo();
 
-    GenerateOTP validateOTP(String otpCode);
+    void deleteExpiredOTPs();
 }
