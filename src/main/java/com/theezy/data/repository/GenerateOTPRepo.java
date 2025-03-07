@@ -9,9 +9,6 @@ import java.util.List;
 public interface GenerateOTPRepo extends MongoRepository<GenerateOTP, String> {
 
     GenerateOTP findByOtpCode(String code);
-//    List<GenerateOTP> findAll();
     void deleteByOtpCode(String otpCode);
-
-
     void deleteByExpirationTimeBefore(LocalDateTime expirationTime);
 }

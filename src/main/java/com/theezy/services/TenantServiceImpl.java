@@ -5,6 +5,7 @@ import com.theezy.data.models.Tenant;
 import com.theezy.data.repository.TenantRepository;
 import com.theezy.dtos.request.TenantLoginRequest;
 import com.theezy.dtos.request.TenantRequest;
+import com.theezy.dtos.response.GenerateOtpResponse;
 import com.theezy.dtos.response.TenantLoginResponse;
 import com.theezy.dtos.response.TenantResponse;
 import com.theezy.exception.UserAlreadyExistException;
@@ -38,25 +39,18 @@ public class TenantServiceImpl implements TenantServices{
         if (!isSuccessful){
             throw new IllegalArgumentException("Invalid Password");
         }
-        return TenantLoginMapper.mapToTenantLoginResponse("Successful");
+        return TenantLoginMapper.mapToTenantLoginResponse("Login Successful, OTP Generated");
     }
-
     @Override
-    public GenerateOTP generateOTP(String email) {
-        Tenant foundTenant = findTenantByEmail(email);
-        GenerateOTP generatedOTP = generateOTPService.generateOTP();
-        foundTenant.setGenerateOTP(generatedOTP);
-        tenantRepository.save(foundTenant);
-        return generatedOTP;
+    public GenerateOtpResponse generateOTP() {
+        return generateOTPService.generateOTP();
     }
-
-
     @Override
     public Long getNumberOfTenantInRepository() {
         return tenantRepository.count();
     }
-    @Override
-    public Tenant findTenantByEmail(String email) {
+
+    private Tenant findTenantByEmail(String email) {
         return tenantRepository.findTenantByEmail(email);
     }
     private boolean checkIfUserExist(String email){

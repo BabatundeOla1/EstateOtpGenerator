@@ -5,5 +5,6 @@ import com.theezy.data.models.Tenant;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface EstateSecurityRepository extends MongoRepository<EstateSecurity, String> {
-    EstateSecurity findEstateSecuritiesByEmail(String email);
+    boolean existsByEmail(String email);
+    EstateSecurity findByEmail(String email);
 }

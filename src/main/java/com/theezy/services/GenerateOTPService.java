@@ -7,6 +7,7 @@ public interface GenerateOTPService {
 
     GenerateOtpResponse generateOTP();
 
+    GenerateOTP generateOTP2();
 
     Long countCodeInOTPRepo();
 
