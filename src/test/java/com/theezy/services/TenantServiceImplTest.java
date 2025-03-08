@@ -20,34 +20,35 @@ class TenantServiceImplTest {
         @Autowired
         private TenantRepository tenantRepository;
 
-        @BeforeEach
-        public void clearRepositoryAfterEachTest(){
-            tenantRepository.deleteAll();
+        public void setUpTenantLogin(TenantLoginRequest tenantLoginRequest){
+            tenantLoginRequest.setEmail("BabatundeOla@gmail.com");
+            tenantLoginRequest.setPassword("Password");
         }
-
-        @Test
-        public void testThatRepositoryIsEmpty(){
-            assertEquals(0, tenantRepository.count());
-        }
-
-        @Test
-        public void testThatYouCanRegisterA_Tenant(){
-            TenantRequest tenant = new TenantRequest();
+        public void setUp(TenantRequest tenant){
             tenant.setRoomId("TH91");
             tenant.setName("Babatunde Olaleye");
             tenant.setEmail("BabatundeOla@gmail.com");
             tenant.setPassword("Password");
+        }
+        @BeforeEach
+        public void clearRepositoryAfterEachTest(){
+            tenantRepository.deleteAll();
+        }
+        @Test
+        public void testThatRepositoryIsEmpty(){
+            assertEquals(0, tenantRepository.count());
+        }
+        @Test
+        public void testThatYouCanRegisterA_Tenant(){
+            TenantRequest tenant = new TenantRequest();
+            setUp(tenant);
             tenantService.registerTenant(tenant);
             assertEquals(1, tenantService.getNumberOfTenantInRepository());
         }
-
         @Test
         public void testThatTenantCanNotRegisterTwice(){
             TenantRequest tenant = new TenantRequest();
-            tenant.setRoomId("TH91");
-            tenant.setName("Babatunde Olaleye");
-            tenant.setEmail("BabatunndeOla@gmail.com");
-            tenant.setPassword("Password");
+            setUp(tenant);
             tenantService.registerTenant(tenant);
             assertEquals(1, tenantService.getNumberOfTenantInRepository());
             assertThrows(UserAlreadyExistException.class, ()-> tenantService.registerTenant(tenant));
@@ -56,16 +57,12 @@ class TenantServiceImplTest {
         @Test
         public void testThatTenantCanLogin(){
             TenantRequest tenant = new TenantRequest();
-            tenant.setRoomId("TH91");
-            tenant.setName("Babatunde Olaleye");
-            tenant.setEmail("BabatunndeOla@gmail.com");
-            tenant.setPassword("Password");
+            setUp(tenant);
             tenantService.registerTenant(tenant);
             assertEquals(1, tenantService.getNumberOfTenantInRepository());
 
             TenantLoginRequest tenantLoginRequest = new TenantLoginRequest();
-            tenantLoginRequest.setEmail("BabatunndeOla@gmail.com");
-            tenantLoginRequest.setPassword("Password");
+            setUpTenantLogin(tenantLoginRequest);
             TenantLoginResponse tenantLoginResponse = tenantService.tenantLogin(tenantLoginRequest);
             assertTrue(tenantLoginResponse.isSuccess());
         }
@@ -73,10 +70,7 @@ class TenantServiceImplTest {
         @Test
         public void testThatErrorIsThrownWhenTenantLogin_WithAnInCorrectPassword(){
             TenantRequest tenant = new TenantRequest();
-            tenant.setName("Babatunde");
-            tenant.setEmail("BabatundeOla@gmail.com");
-            tenant.setRoomId("TH91");
-            tenant.setPassword("Password");
+            setUp(tenant);
             tenantService.registerTenant(tenant);
             assertEquals(1, tenantService.getNumberOfTenantInRepository());
 
@@ -89,10 +83,7 @@ class TenantServiceImplTest {
         @Test
         public void testThatErrorIsThrownWhenTenantLogin_WithAnUnregisteredEmail(){
             TenantRequest tenant = new TenantRequest();
-            tenant.setName("Babatunde");
-            tenant.setEmail("BabatundeOla@gmail.com");
-            tenant.setRoomId("TH91");
-            tenant.setPassword("Password");
+            setUp(tenant);
             tenantService.registerTenant(tenant);
             assertEquals(1, tenantService.getNumberOfTenantInRepository());
 

@@ -5,7 +5,6 @@ import com.theezy.dtos.request.TenantRequest;
 import com.theezy.dtos.response.GenerateOtpResponse;
 import com.theezy.dtos.response.TenantLoginResponse;
 import com.theezy.dtos.response.TenantResponse;
-import com.theezy.services.GenerateOTPService;
 import com.theezy.services.TenantServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

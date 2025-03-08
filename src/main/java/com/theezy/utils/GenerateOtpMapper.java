@@ -3,10 +3,6 @@ package com.theezy.utils;
 import com.theezy.data.models.GenerateOTP;
 import com.theezy.dtos.request.GenerateOtpRequest;
 import com.theezy.dtos.response.GenerateOtpResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 public class GenerateOtpMapper {
 
