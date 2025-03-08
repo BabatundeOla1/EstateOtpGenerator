@@ -25,7 +25,7 @@ public class TenantController {
     public TenantLoginResponse tenantLogin(@RequestBody TenantLoginRequest tenantLoginRequest){
         return tenantService.tenantLogin(tenantLoginRequest);
     }
-    @GetMapping
+    @GetMapping("/generateOTP")
     public GenerateOtpResponse generateOTP(){
         return tenantService.generateOTP();
     }

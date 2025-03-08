@@ -36,11 +36,6 @@ public class SecurityServicesImpl implements SecurityService{
     }
 
     @Override
-    public GenerateOTP findOtpByCode(String otpCode) {
-        return generateOTPRepo.findByOtpCode(otpCode);
-    }
-
-    @Override
     public EstateSecurityResponse createAccount(EstateSecurityRequest estateSecurityRequest) {
         if (checkIfUserExist(estateSecurityRequest.getEmail())){
             throw new UserAlreadyExistException("Security already exist");
@@ -67,5 +62,8 @@ public class SecurityServicesImpl implements SecurityService{
 
     private boolean checkIfUserExist(String email){
         return estateSecurityRepository.existsByEmail(email);
+    }
+    private GenerateOTP findOtpByCode(String otpCode) {
+        return generateOTPRepo.findByOtpCode(otpCode);
     }
 }

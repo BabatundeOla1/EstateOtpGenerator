@@ -2,8 +2,11 @@ package com.theezy.dtos.response;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class GenerateOtpResponse {
     private String otpCode;
-    private String expirationTime;
+    private LocalDateTime expirationTime;
+//    private String expirationTime;
 }

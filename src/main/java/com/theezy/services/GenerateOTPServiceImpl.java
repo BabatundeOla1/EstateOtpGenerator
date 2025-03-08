@@ -35,18 +35,18 @@ public class GenerateOTPServiceImpl implements GenerateOTPService{
         return  GenerateOtpMapper.mapToResponse(generateOTP);
     }
 
-    @Override
-    public GenerateOTP generateOTP2() {
-        GoogleAuthenticator authenticator = new GoogleAuthenticator();
-        GoogleAuthenticatorKey key = authenticator.createCredentials();
-        String otp = String.valueOf(authenticator.getTotpPassword(key.getKey()));
-
-        LocalDateTime currentTime = LocalDateTime.now().plusMinutes(30);
-
-        GenerateOTP generatedOtp = createRecords2(currentTime, otp);
-        generateOTPRepo.save(generatedOtp);
-        return generatedOtp;
-    }
+//    @Override
+//    public GenerateOTP generateOTP2() {
+//        GoogleAuthenticator authenticator = new GoogleAuthenticator();
+//        GoogleAuthenticatorKey key = authenticator.createCredentials();
+//        String otp = String.valueOf(authenticator.getTotpPassword(key.getKey()));
+//
+//        LocalDateTime currentTime = LocalDateTime.now().plusMinutes(30);
+//
+//        GenerateOTP generatedOtp = createRecords2(currentTime, otp);
+//        generateOTPRepo.save(generatedOtp);
+//        return generatedOtp;
+//    }
 
 
     @Override
@@ -55,7 +55,6 @@ public class GenerateOTPServiceImpl implements GenerateOTPService{
     }
 
     @Scheduled(fixedRate = 60000)
-    @Override
     public void deleteExpiredOTPs() {
         LocalDateTime currentTime = LocalDateTime.now();
         generateOTPRepo.deleteByExpirationTimeBefore(currentTime);
@@ -64,11 +63,11 @@ public class GenerateOTPServiceImpl implements GenerateOTPService{
     private GenerateOTP createRecords(GenerateOtpRequest generateOtpRequest){
         return GenerateOtpMapper.mapRequest(generateOtpRequest);
     }
-    private GenerateOTP createRecords2(LocalDateTime expirationTime, String otp){
-        GenerateOTP otpRecord = new GenerateOTP();
-        otpRecord.setOtpCode(otp);
-        otpRecord.setExpirationTime(expirationTime);
-        return otpRecord;
-    }
+//    private GenerateOTP createRecords2(LocalDateTime expirationTime, String otp){
+//        GenerateOTP otpRecord = new GenerateOTP();
+//        otpRecord.setOtpCode(otp);
+//        otpRecord.setExpirationTime(expirationTime);
+//        return otpRecord;
+//    }
 
 }

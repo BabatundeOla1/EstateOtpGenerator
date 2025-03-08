@@ -10,7 +10,7 @@ public interface SecurityService {
 
     GenerateOTP validateOTP(String otpCode);
 
-    GenerateOTP findOtpByCode(String otpCode);
+//    GenerateOTP findOtpByCode(String otpCode);
 
     EstateSecurityResponse createAccount(EstateSecurityRequest estateSecurityRequest);
 

@@ -7,9 +7,9 @@ public interface GenerateOTPService {
 
     GenerateOtpResponse generateOTP();
 
-    GenerateOTP generateOTP2();
+//    GenerateOTP generateOTP2();
 
     Long countCodeInOTPRepo();
 
-    void deleteExpiredOTPs();
+//    void deleteExpiredOTPs();
 }

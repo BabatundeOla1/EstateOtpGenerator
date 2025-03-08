@@ -20,7 +20,6 @@ class TenantServiceImplTest {
         @Autowired
         private TenantRepository tenantRepository;
 
-
         @BeforeEach
         public void clearRepositoryAfterEachTest(){
             tenantRepository.deleteAll();
