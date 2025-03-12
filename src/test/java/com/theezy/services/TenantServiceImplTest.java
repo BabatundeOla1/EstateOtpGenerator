@@ -1,8 +1,12 @@
 package com.theezy.services;
 
+import com.theezy.data.models.GenerateOTP;
+import com.theezy.data.repository.GenerateOTPRepo;
 import com.theezy.data.repository.TenantRepository;
+import com.theezy.dtos.request.GenerateOtpRequest;
 import com.theezy.dtos.request.TenantLoginRequest;
 import com.theezy.dtos.request.TenantRequest;
+import com.theezy.dtos.response.GenerateOtpResponse;
 import com.theezy.dtos.response.TenantLoginResponse;
 import com.theezy.exception.UserAlreadyExistException;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +24,12 @@ class TenantServiceImplTest {
         @Autowired
         private TenantRepository tenantRepository;
 
+        @Autowired
+        private GenerateOTPService generateOTPService;
+
+        @Autowired
+        private GenerateOTPRepo generateOTPRepo;
+
         public void setUpTenantLogin(TenantLoginRequest tenantLoginRequest){
             tenantLoginRequest.setEmail("BabatundeOla@gmail.com");
             tenantLoginRequest.setPassword("Password");
@@ -33,6 +43,10 @@ class TenantServiceImplTest {
         @BeforeEach
         public void clearRepositoryAfterEachTest(){
             tenantRepository.deleteAll();
+        }
+        @BeforeEach
+        public void clearOTP_RepositoryBeforeEachTest(){
+            generateOTPRepo.deleteAll();
         }
         @Test
         public void testThatRepositoryIsEmpty(){
@@ -53,7 +67,6 @@ class TenantServiceImplTest {
             assertEquals(1, tenantService.getNumberOfTenantInRepository());
             assertThrows(UserAlreadyExistException.class, ()-> tenantService.registerTenant(tenant));
         }
-
         @Test
         public void testThatTenantCanLogin(){
             TenantRequest tenant = new TenantRequest();
@@ -66,7 +79,6 @@ class TenantServiceImplTest {
             TenantLoginResponse tenantLoginResponse = tenantService.tenantLogin(tenantLoginRequest);
             assertTrue(tenantLoginResponse.isSuccess());
         }
-
         @Test
         public void testThatErrorIsThrownWhenTenantLogin_WithAnInCorrectPassword(){
             TenantRequest tenant = new TenantRequest();
@@ -79,7 +91,6 @@ class TenantServiceImplTest {
             tenantLoginRequest.setPassword("tunde");
             assertThrows(IllegalArgumentException.class, ()-> tenantService.tenantLogin(tenantLoginRequest));
         }
-
         @Test
         public void testThatErrorIsThrownWhenTenantLogin_WithAnUnregisteredEmail(){
             TenantRequest tenant = new TenantRequest();
@@ -91,5 +102,23 @@ class TenantServiceImplTest {
             tenantLoginRequest.setEmail("Unregistered@gmail.com");
             tenantLoginRequest.setPassword("Password");
             assertThrows(NullPointerException.class, ()-> tenantService.tenantLogin(tenantLoginRequest));
+        }
+        @Test
+        public void testThatTenantCan_GenerateOTPCode(){
+            TenantRequest tenantRequest = new TenantRequest();
+            setUp(tenantRequest);
+            tenantService.registerTenant(tenantRequest);
+            assertEquals(1, tenantService.getNumberOfTenantInRepository());
+
+            TenantLoginRequest tenantLoginRequest = new TenantLoginRequest();
+            setUpTenantLogin(tenantLoginRequest);
+            TenantLoginResponse tenantLoginResponse = tenantService.tenantLogin(tenantLoginRequest);
+            assertTrue(tenantLoginResponse.isSuccess());
+
+            GenerateOtpResponse otp = tenantService.generateOTP(tenantRequest);
+
+            assertNotNull(tenantRequest.getGenerateOTP());
+            assertEquals(1, generateOTPService.countCodeInOTPRepo());
+            System.out.println(otp);
         }
 }

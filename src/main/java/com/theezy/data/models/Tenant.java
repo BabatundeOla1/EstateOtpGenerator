@@ -8,5 +8,5 @@ public class Tenant {
     private String name;
     private String roomId;
     private String password;
-    private GenerateOTP generateOTP;
+    private String generateOTP;
 }

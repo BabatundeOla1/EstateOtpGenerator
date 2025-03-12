@@ -8,6 +8,7 @@ import com.theezy.dtos.request.EstateSecurityLoginRequest;
 import com.theezy.dtos.request.EstateSecurityRequest;
 import com.theezy.dtos.response.EstateSecurityLoginResponse;
 import com.theezy.dtos.response.EstateSecurityResponse;
+import com.theezy.dtos.response.GenerateOtpResponse;
 import com.theezy.exception.OtpExpiredException;
 import com.theezy.exception.UserAlreadyExistException;
 import com.theezy.utils.EstateSecurityLoginMapper;
@@ -35,6 +36,15 @@ public class SecurityServicesImpl implements SecurityService{
         return foundCode;
     }
 
+    @Override
+    public GenerateOtpResponse validateOTP2(String otpCode) {
+        GenerateOtpResponse foundCode = findGenerateOTPByOtpCode(otpCode);
+        boolean isSuccessful = foundCode != null && foundCode.getExpirationTime().isBefore(LocalDateTime.now());
+        if (!isSuccessful) {
+            throw new OtpExpiredException("Code Already Expired");
+        }
+        return foundCode;
+    }
     @Override
     public EstateSecurityResponse createAccount(EstateSecurityRequest estateSecurityRequest) {
         if (checkIfUserExist(estateSecurityRequest.getEmail())){
@@ -66,4 +76,8 @@ public class SecurityServicesImpl implements SecurityService{
     private GenerateOTP findOtpByCode(String otpCode) {
         return generateOTPRepo.findByOtpCode(otpCode);
     }
+    private GenerateOtpResponse findGenerateOTPByOtpCode(String otpCode) {
+        return generateOTPRepo.findGenerateOTPByOtpCode(otpCode);
+    }
+
 }

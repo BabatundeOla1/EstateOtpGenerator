@@ -28,9 +28,12 @@ class GenerateOTPServiceImplTest {
     public void testThatTenantCanGenerateCode(){
         GenerateOtpResponse generatedCode = generateOTPService.generateOTP();
         assertEquals(1, generateOTPService.countCodeInOTPRepo());
-        System.out.println("Time: " + generatedCode.getExpirationTime());
-        System.out.println("Code: " + generatedCode.getOtpCode());
-        System.out.println(generatedCode);
+    }
+
+    @Test
+    public void testThatGeneratedOTP_RepositoryIsNotEmptyWhenOTP_IsGenerated(){
+        GenerateOtpResponse generatedCode = generateOTPService.generateOTP();
+        assertNotNull(generateOTPService.countCodeInOTPRepo());
     }
     @Test
     public void testThatGeneratedCodeCanExpire(){
@@ -40,12 +43,27 @@ class GenerateOTPServiceImplTest {
         assertNotNull(generatedCode.getExpirationTime());
         assertEquals(1, generateOTPService.countCodeInOTPRepo());
 
-
         LocalDateTime currentTime = LocalDateTime.now();
 //        LocalDateTime expirationTime = LocalDateTime.parse(generatedCode.getExpirationTime());
         LocalDateTime expirationTime = generatedCode.getExpirationTime();
         assertTrue(expirationTime.isAfter(currentTime));
+        System.out.println(generatedCode);
+
+    }
+
+    @Test
+    public void testThatOTP_IsDeletedAutomaticallyWhenExpired(){
+        GenerateOtpResponse generatedOtp = generateOTPService.generateOTP();
+        assertEquals(1, generateOTPService.countCodeInOTPRepo());
+        assertEquals(6, generatedOtp.getOtpCode().length());
+
+        LocalDateTime  currentTime = LocalDateTime.now();
+        generatedOtp.setExpirationTime(currentTime.minusMinutes(30));
+        generateOTPService.deleteExpiredOTPs();
+        assertEquals(1, generateOTPService.countCodeInOTPRepo());
         System.out.println(currentTime);
-        System.out.println(expirationTime);
+        System.out.println(generatedOtp.getExpirationTime());
+        System.out.println(generatedOtp);
+
     }
 }

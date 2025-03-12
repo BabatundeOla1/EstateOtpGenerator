@@ -23,7 +23,8 @@ public class GenerateOTPServiceImpl implements GenerateOTPService{
     public GenerateOtpResponse generateOTP() {
         GoogleAuthenticator authenticator = new GoogleAuthenticator();
         GoogleAuthenticatorKey key = authenticator.createCredentials();
-        String otp = String.valueOf(authenticator.getTotpPassword(key.getKey()));
+//        String otp = String.valueOf(authenticator.getTotpPassword(key.getKey()));
+        String otp = String.format("%06d", authenticator.getTotpPassword(key.getKey()));
 
         LocalDateTime currentTime = LocalDateTime.now().plusMinutes(30);
 
@@ -35,39 +36,18 @@ public class GenerateOTPServiceImpl implements GenerateOTPService{
         return  GenerateOtpMapper.mapToResponse(generateOTP);
     }
 
-//    @Override
-//    public GenerateOTP generateOTP2() {
-//        GoogleAuthenticator authenticator = new GoogleAuthenticator();
-//        GoogleAuthenticatorKey key = authenticator.createCredentials();
-//        String otp = String.valueOf(authenticator.getTotpPassword(key.getKey()));
-//
-//        LocalDateTime currentTime = LocalDateTime.now().plusMinutes(30);
-//
-//        GenerateOTP generatedOtp = createRecords2(currentTime, otp);
-//        generateOTPRepo.save(generatedOtp);
-//        return generatedOtp;
-//    }
-
-
     @Override
     public Long countCodeInOTPRepo() {
         return generateOTPRepo.count();
     }
-
-    @Scheduled(fixedRate = 60000)
+    @Override
+    @Scheduled(fixedRate = 10000)
     public void deleteExpiredOTPs() {
         LocalDateTime currentTime = LocalDateTime.now();
         generateOTPRepo.deleteByExpirationTimeBefore(currentTime);
     }
-
     private GenerateOTP createRecords(GenerateOtpRequest generateOtpRequest){
         return GenerateOtpMapper.mapRequest(generateOtpRequest);
     }
-//    private GenerateOTP createRecords2(LocalDateTime expirationTime, String otp){
-//        GenerateOTP otpRecord = new GenerateOTP();
-//        otpRecord.setOtpCode(otp);
-//        otpRecord.setExpirationTime(expirationTime);
-//        return otpRecord;
-//    }
 
 }

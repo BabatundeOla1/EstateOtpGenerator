@@ -14,7 +14,6 @@ public class TenantLoginMapper {
 
     public static TenantLoginResponse mapToTenantLoginResponse (String message){
         TenantLoginResponse tenantLoginResponse = new TenantLoginResponse();
-//        tenantLoginResponse.setMessage(message);
         tenantLoginResponse.setSuccess(true);
         return tenantLoginResponse;
     }

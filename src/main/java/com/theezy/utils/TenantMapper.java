@@ -12,6 +12,7 @@ public class TenantMapper {
         tenant.setRoomId(tenantRequest.getRoomId());
         tenant.setEmail(tenantRequest.getEmail());
         tenant.setPassword(tenantRequest.getPassword());
+        tenant.setGenerateOTP(tenantRequest.getGenerateOTP());
         return tenant;
     }
 

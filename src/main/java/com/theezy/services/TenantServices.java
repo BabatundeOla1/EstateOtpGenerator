@@ -1,5 +1,6 @@
 package com.theezy.services;
 
+import com.theezy.data.models.GenerateOTP;
 import com.theezy.data.models.Tenant;
 import com.theezy.dtos.request.TenantLoginRequest;
 import com.theezy.dtos.request.TenantRequest;
@@ -13,6 +14,5 @@ public interface TenantServices {
 
     TenantLoginResponse tenantLogin(TenantLoginRequest tenantLoginRequest);
     Long getNumberOfTenantInRepository();
-    GenerateOtpResponse generateOTP();
-
+    GenerateOtpResponse generateOTP(TenantRequest tenant);
 }

@@ -42,9 +42,12 @@ public class TenantServiceImpl implements TenantServices{
         return TenantLoginMapper.mapToTenantLoginResponse("Login Successful, OTP Generated");
     }
     @Override
-    public GenerateOtpResponse generateOTP() {
-        return generateOTPService.generateOTP();
+    public GenerateOtpResponse generateOTP(TenantRequest tenantRequest) {
+        GenerateOtpResponse generateOtpResponse = generateOTPService.generateOTP();
+        tenantRequest.setGenerateOTP(generateOtpResponse.getOtpCode());
+        return generateOtpResponse;
     }
+
     @Override
     public Long getNumberOfTenantInRepository() {
         return tenantRepository.count();
