@@ -1,5 +1,6 @@
 package com.theezy.controller;
 
+import com.theezy.data.models.GenerateOTP;
 import com.theezy.dtos.request.TenantLoginRequest;
 import com.theezy.dtos.request.TenantRequest;
 import com.theezy.dtos.response.GenerateOtpResponse;
@@ -9,7 +10,7 @@ import com.theezy.services.TenantServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("")
+@RequestMapping("/tenant/")
 @RestController
 public class TenantController {
 
@@ -25,7 +26,7 @@ public class TenantController {
         return tenantService.tenantLogin(tenantLoginRequest);
     }
     @PostMapping("/generateOTP")
-    public GenerateOtpResponse generateOTP(@RequestBody TenantRequest tenantRequest){
-        return tenantService.generateOTP(tenantRequest);
+    public GenerateOTP generateOTP(){
+        return tenantService.generateOTP();
     }
 }

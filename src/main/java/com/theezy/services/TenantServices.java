@@ -14,5 +14,5 @@ public interface TenantServices {
 
     TenantLoginResponse tenantLogin(TenantLoginRequest tenantLoginRequest);
     Long getNumberOfTenantInRepository();
-    GenerateOtpResponse generateOTP(TenantRequest tenant);
+    GenerateOTP generateOTP();
 }

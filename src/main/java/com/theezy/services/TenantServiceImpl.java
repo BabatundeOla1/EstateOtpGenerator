@@ -2,6 +2,7 @@ package com.theezy.services;
 
 import com.theezy.data.models.GenerateOTP;
 import com.theezy.data.models.Tenant;
+import com.theezy.data.repository.GenerateOTPRepo;
 import com.theezy.data.repository.TenantRepository;
 import com.theezy.dtos.request.TenantLoginRequest;
 import com.theezy.dtos.request.TenantRequest;
@@ -22,12 +23,15 @@ public class TenantServiceImpl implements TenantServices{
     @Autowired
     private GenerateOTPService generateOTPService;
 
+    @Autowired
+    private GenerateOTPRepo generateOTPRepo;
+
+
     @Override
     public TenantResponse registerTenant(TenantRequest tenantRequest) {
         if (checkIfUserExist(tenantRequest.getEmail())){
             throw new UserAlreadyExistException("Tenant already exist");
         }
-
         Tenant tenant = TenantMapper.mapTenantToRequest(tenantRequest);
         tenantRepository.save(tenant);
         return TenantMapper.mapTenantToResponse(tenant);
@@ -41,12 +45,13 @@ public class TenantServiceImpl implements TenantServices{
         }
         return TenantLoginMapper.mapToTenantLoginResponse("Login Successful, OTP Generated");
     }
+
     @Override
-    public GenerateOtpResponse generateOTP(TenantRequest tenantRequest) {
-        GenerateOtpResponse generateOtpResponse = generateOTPService.generateOTP();
-        tenantRequest.setGenerateOTP(generateOtpResponse.getOtpCode());
-        return generateOtpResponse;
+    public GenerateOTP generateOTP() {
+        GenerateOTP generateOTP = generateOTPService.generateOTP();
+        return generateOTP;
     }
+
 
     @Override
     public Long getNumberOfTenantInRepository() {

@@ -8,12 +8,7 @@ import com.theezy.dtos.response.EstateSecurityResponse;
 import com.theezy.dtos.response.GenerateOtpResponse;
 
 public interface SecurityService {
-
-    GenerateOTP validateOTP(String otpCode);
-    GenerateOtpResponse validateOTP2(String otpCode);
-
-//    GenerateOTP findOtpByCode(String otpCode);
-
+    GenerateOtpResponse validateOTP(String otpCode);
     EstateSecurityResponse createAccount(EstateSecurityRequest estateSecurityRequest);
 
     EstateSecurityLoginResponse login(EstateSecurityLoginRequest estateSecurityLoginRequest);

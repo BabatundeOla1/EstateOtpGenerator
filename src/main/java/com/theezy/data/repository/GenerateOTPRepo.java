@@ -6,11 +6,12 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface GenerateOTPRepo extends MongoRepository<GenerateOTP, String> {
 
-    GenerateOTP findByOtpCode(String code);
-    GenerateOtpResponse findGenerateOTPByOtpCode(String code);
+    Optional<GenerateOTP> findByOtpCode(String code);
+//    GenerateOtpResponse findGenerateOTPByOtpCode(String code);
     void deleteByOtpCode(String otpCode);
     void deleteByExpirationTimeBefore(LocalDateTime expirationTime);
 }

@@ -6,6 +6,7 @@ import com.theezy.data.repository.EstateSecurityRepository;
 import com.theezy.data.repository.GenerateOTPRepo;
 import com.theezy.dtos.request.EstateSecurityLoginRequest;
 import com.theezy.dtos.request.EstateSecurityRequest;
+import com.theezy.dtos.request.VisitorsPassRequest;
 import com.theezy.dtos.response.EstateSecurityLoginResponse;
 import com.theezy.dtos.response.EstateSecurityResponse;
 import com.theezy.dtos.response.GenerateOtpResponse;
@@ -13,6 +14,7 @@ import com.theezy.exception.OtpExpiredException;
 import com.theezy.exception.UserAlreadyExistException;
 import com.theezy.utils.EstateSecurityLoginMapper;
 import com.theezy.utils.EstateSecurityMapper;
+import com.theezy.utils.GenerateOtpMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,24 +29,29 @@ public class SecurityServicesImpl implements SecurityService{
     private EstateSecurityRepository estateSecurityRepository;
 
     @Override
-    public GenerateOTP validateOTP(String otpCode) {
-        GenerateOTP foundCode = findOtpByCode(otpCode);
+    public GenerateOtpResponse validateOTP(String otpCode) {
+        GenerateOTP foundCode = findGenerateOTPByOtpCode(otpCode);
         boolean isSuccessful = foundCode != null && foundCode.getExpirationTime().isBefore(LocalDateTime.now());
-        if (!isSuccessful) {
+
+        if (isSuccessful) {
             throw new OtpExpiredException("Code Already Expired");
         }
-        return foundCode;
+        return GenerateOtpMapper.mapToResponse(foundCode);
     }
 
-    @Override
-    public GenerateOtpResponse validateOTP2(String otpCode) {
-        GenerateOtpResponse foundCode = findGenerateOTPByOtpCode(otpCode);
-        boolean isSuccessful = foundCode != null && foundCode.getExpirationTime().isBefore(LocalDateTime.now());
-        if (!isSuccessful) {
-            throw new OtpExpiredException("Code Already Expired");
-        }
-        return foundCode;
-    }
+
+//    @Override
+//    public GenerateOtpResponse checkOtpValidityAndCreateAVisitorPass(String otpCode, String visitorsName, String visitorPhoneNumber) {
+//        GenerateOtpResponse validatedCode = checkOtpValidity(otpCode);
+//
+//        VisitorsPassRequest visitorsPassRequest = new VisitorsPassRequest();
+//        visitorsPassRequest.setName(visitorsName);
+//        visitorsPassRequest.setPhoneNumber(visitorPhoneNumber);
+//        visitorsPassRequest.setTimeIn(LocalDateTime.now());
+//        visitorsPassRequest.setValid(Boolean.FALSE);
+//        return validatedCode;
+//    }
+
     @Override
     public EstateSecurityResponse createAccount(EstateSecurityRequest estateSecurityRequest) {
         if (checkIfUserExist(estateSecurityRequest.getEmail())){
@@ -73,11 +80,16 @@ public class SecurityServicesImpl implements SecurityService{
     private boolean checkIfUserExist(String email){
         return estateSecurityRepository.existsByEmail(email);
     }
-    private GenerateOTP findOtpByCode(String otpCode) {
-        return generateOTPRepo.findByOtpCode(otpCode);
-    }
-    private GenerateOtpResponse findGenerateOTPByOtpCode(String otpCode) {
-        return generateOTPRepo.findGenerateOTPByOtpCode(otpCode);
+    private GenerateOTP findGenerateOTPByOtpCode(String otpCode) {
+        return generateOTPRepo.findByOtpCode(otpCode).orElseThrow(()->new OtpExpiredException("Invalid OTP"));
     }
 
+//    private GenerateOtpResponse checkOtpValidity(String otpCode){
+//        GenerateOtpResponse foundCode = findGenerateOTPByOtpCode(otpCode);
+//        boolean isSuccessful = foundCode != null && foundCode.getExpirationTime().isBefore(LocalDateTime.now());
+//        if (!isSuccessful) {
+//            throw new OtpExpiredException("Code Already Expired");
+//        }
+//        return foundCode;
+//    }
 }

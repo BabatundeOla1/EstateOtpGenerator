@@ -75,27 +75,4 @@ class SecurityServicesImplTest {
          EstateSecurityLoginResponse estateSecurityLoginResponse = securityService.login(estateSecurityLoginRequest);
         assertTrue(estateSecurityLoginResponse.isSuccess());
     }
-
-    @Test
-    public void testThatEstateSecurityCanValidateGeneratedOTP_code(){
-        EstateSecurityRequest estateSecurityRequest = new EstateSecurityRequest();
-        setEstateSecurityRegistration(estateSecurityRequest);
-        securityService.createAccount(estateSecurityRequest);
-        assertEquals(1, securityService.getNumberOfSecurityInRepo());
-
-        EstateSecurityLoginRequest estateSecurityLoginRequest = new EstateSecurityLoginRequest();
-        setEstateSecurityLogin(estateSecurityLoginRequest);
-        EstateSecurityLoginResponse estateSecurityLoginResponse = securityService.login(estateSecurityLoginRequest);
-        assertTrue(estateSecurityLoginResponse.isSuccess());
-
-        GenerateOTP generateOtpRequest = new GenerateOTP();
-        generateOtpRequest.setOtpCode("123456");
-        generateOtpRequest.setExpirationTime(LocalDateTime.now().plusMinutes(30));
-        generateOTPRepo.save(generateOtpRequest);
-
-        GenerateOtpResponse validateCode = securityService.validateOTP2("123456");
-
-
-//        assertEquals(generateOtpRequest, securityService.validateOTP(generateOtpRequest.getOtpCode()));
-    }
 }

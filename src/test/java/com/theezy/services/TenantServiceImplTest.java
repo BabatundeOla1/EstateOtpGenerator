@@ -115,10 +115,8 @@ class TenantServiceImplTest {
             TenantLoginResponse tenantLoginResponse = tenantService.tenantLogin(tenantLoginRequest);
             assertTrue(tenantLoginResponse.isSuccess());
 
-            GenerateOtpResponse otp = tenantService.generateOTP(tenantRequest);
+            GenerateOTP otp = tenantService.generateOTP();
 
-            assertNotNull(tenantRequest.getGenerateOTP());
             assertEquals(1, generateOTPService.countCodeInOTPRepo());
-            System.out.println(otp);
         }
 }
