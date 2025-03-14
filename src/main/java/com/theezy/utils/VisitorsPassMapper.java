@@ -13,6 +13,7 @@ public class VisitorsPassMapper {
         visitorsPass.setName(visitorsPassRequest.getName());
         visitorsPass.setPhoneNumber(visitorsPassRequest.getPhoneNumber());
         visitorsPass.setTimeIn(LocalDateTime.now());
+        visitorsPass.setOtpCode(visitorsPassRequest.getOtpCode());
         return visitorsPass;
     }
 }

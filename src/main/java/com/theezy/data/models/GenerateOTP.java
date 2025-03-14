@@ -8,6 +8,4 @@ import java.time.LocalDateTime;
 public class GenerateOTP {
     private String otpCode;
     private LocalDateTime expirationTime;
-//    private String tenantName;
-//    private String tenantEmail;
 }

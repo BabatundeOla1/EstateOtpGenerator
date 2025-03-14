@@ -13,7 +13,7 @@ public class VisitorsPass {
     private String Id;
     private String name;
     private String phoneNumber;
-    private Tenant tenantInfo;
+    private String otpCode;
     private LocalDateTime timeIn;
     private LocalDateTime timeOut;
     private boolean isValid;

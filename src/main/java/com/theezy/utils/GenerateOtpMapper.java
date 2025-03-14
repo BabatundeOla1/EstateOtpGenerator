@@ -1,6 +1,7 @@
 package com.theezy.utils;
 
 import com.theezy.data.models.GenerateOTP;
+import com.theezy.data.models.VisitorsPass;
 import com.theezy.dtos.request.GenerateOtpRequest;
 import com.theezy.dtos.response.GenerateOtpResponse;
 
@@ -13,10 +14,11 @@ public class GenerateOtpMapper {
         return generateOTP;
     }
 
-    public static GenerateOtpResponse mapToResponse(GenerateOTP generateOTP){
+    public static GenerateOtpResponse mapToResponse(GenerateOTP generateOTP, VisitorsPass visitorPass){
         GenerateOtpResponse response = new GenerateOtpResponse();
         response.setOtpCode(generateOTP.getOtpCode());
         response.setExpirationTime(generateOTP.getExpirationTime());
+        response.setVisitorsPass(visitorPass);
         return response;
     }
 }

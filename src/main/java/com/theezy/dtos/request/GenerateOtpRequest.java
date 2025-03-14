@@ -7,6 +7,4 @@ import java.time.LocalDateTime;
 public class GenerateOtpRequest {
     private String otpCode;
     private LocalDateTime expirationTime;
-//    private String tenantName;
-//    private String tenantEmail;
 }

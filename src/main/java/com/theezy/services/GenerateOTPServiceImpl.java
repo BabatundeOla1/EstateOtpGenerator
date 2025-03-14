@@ -26,7 +26,7 @@ public class GenerateOTPServiceImpl implements GenerateOTPService{
         GoogleAuthenticatorKey key = authenticator.createCredentials();
         String otp = String.format("%06d", authenticator.getTotpPassword(key.getKey()));
 
-        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(300);
+        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(30);
 
         GenerateOtpRequest generateOtpRequest = new GenerateOtpRequest();
         GenerateOTP generateOTP = createRecords(expirationTime, otp);
@@ -39,7 +39,7 @@ public class GenerateOTPServiceImpl implements GenerateOTPService{
     }
 
     @Override
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 10000)
     public void deleteExpiredOTPs() {
         LocalDateTime currentTime = LocalDateTime.now();
         generateOTPRepo.deleteByExpirationTimeBefore(currentTime);

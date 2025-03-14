@@ -3,8 +3,11 @@ package com.theezy.data.repository;
 import com.theezy.data.models.VisitorsPass;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface VisitorsPassRepo extends MongoRepository<VisitorsPass, String> {
-    VisitorsPass findVisitorsPassByPhoneNumber(String phoneNumber);
+import java.util.Optional;
 
-    VisitorsPass findVisitorsPassById(String visitorPassId);
+public interface VisitorsPassRepo extends MongoRepository<VisitorsPass, String> {
+    Optional<VisitorsPass> findVisitorsPassByName(String name);
+
+    boolean existsByName(String name);
+
 }

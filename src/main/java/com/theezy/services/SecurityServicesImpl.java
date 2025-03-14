@@ -2,8 +2,10 @@ package com.theezy.services;
 
 import com.theezy.data.models.EstateSecurity;
 import com.theezy.data.models.GenerateOTP;
+import com.theezy.data.models.VisitorsPass;
 import com.theezy.data.repository.EstateSecurityRepository;
 import com.theezy.data.repository.GenerateOTPRepo;
+import com.theezy.data.repository.VisitorsPassRepo;
 import com.theezy.dtos.request.EstateSecurityLoginRequest;
 import com.theezy.dtos.request.EstateSecurityRequest;
 import com.theezy.dtos.request.VisitorsPassRequest;
@@ -28,29 +30,31 @@ public class SecurityServicesImpl implements SecurityService{
     @Autowired
     private EstateSecurityRepository estateSecurityRepository;
 
+    @Autowired
+    private VisitorsPassRepo visitorsPassRepo;
+
+    @Autowired
+    private VisitorsPassService visitorsPassService;
+
     @Override
-    public GenerateOtpResponse validateOTP(String otpCode) {
-        GenerateOTP foundCode = findGenerateOTPByOtpCode(otpCode);
+    public GenerateOtpResponse validateOTP(VisitorsPassRequest visitorsPassRequest) {
+        GenerateOTP foundCode = findGenerateOTPByOtpCode(visitorsPassRequest.getOtpCode());
         boolean isSuccessful = foundCode != null && foundCode.getExpirationTime().isBefore(LocalDateTime.now());
 
         if (isSuccessful) {
             throw new OtpExpiredException("Code Already Expired");
         }
-        return GenerateOtpMapper.mapToResponse(foundCode);
+
+        VisitorsPass visitorsPass = new VisitorsPass();
+        visitorsPass.setName(visitorsPassRequest.getName());
+        visitorsPass.setPhoneNumber(visitorsPassRequest.getPhoneNumber());
+        visitorsPass.setTimeIn(LocalDateTime.now());
+        visitorsPass.setValid(Boolean.TRUE);
+        visitorsPass.setOtpCode(foundCode.getOtpCode());
+        visitorsPassRepo.save(visitorsPass);
+
+        return GenerateOtpMapper.mapToResponse(foundCode, visitorsPass);
     }
-
-
-//    @Override
-//    public GenerateOtpResponse checkOtpValidityAndCreateAVisitorPass(String otpCode, String visitorsName, String visitorPhoneNumber) {
-//        GenerateOtpResponse validatedCode = checkOtpValidity(otpCode);
-//
-//        VisitorsPassRequest visitorsPassRequest = new VisitorsPassRequest();
-//        visitorsPassRequest.setName(visitorsName);
-//        visitorsPassRequest.setPhoneNumber(visitorPhoneNumber);
-//        visitorsPassRequest.setTimeIn(LocalDateTime.now());
-//        visitorsPassRequest.setValid(Boolean.FALSE);
-//        return validatedCode;
-//    }
 
     @Override
     public EstateSecurityResponse createAccount(EstateSecurityRequest estateSecurityRequest) {
@@ -77,6 +81,11 @@ public class SecurityServicesImpl implements SecurityService{
         return estateSecurityRepository.count();
     }
 
+//    @Override
+//    public VisitorsPass validateForCheckOut(VisitorsPassRequest visitorsPassRequest) {
+//        return visitorsPassService.validateForCheckOut(visitorsPassRequest);
+//    }
+
     private boolean checkIfUserExist(String email){
         return estateSecurityRepository.existsByEmail(email);
     }
@@ -84,12 +93,4 @@ public class SecurityServicesImpl implements SecurityService{
         return generateOTPRepo.findByOtpCode(otpCode).orElseThrow(()->new OtpExpiredException("Invalid OTP"));
     }
 
-//    private GenerateOtpResponse checkOtpValidity(String otpCode){
-//        GenerateOtpResponse foundCode = findGenerateOTPByOtpCode(otpCode);
-//        boolean isSuccessful = foundCode != null && foundCode.getExpirationTime().isBefore(LocalDateTime.now());
-//        if (!isSuccessful) {
-//            throw new OtpExpiredException("Code Already Expired");
-//        }
-//        return foundCode;
-//    }
 }

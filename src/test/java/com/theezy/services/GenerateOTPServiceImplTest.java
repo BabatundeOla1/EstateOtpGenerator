@@ -45,7 +45,10 @@ class GenerateOTPServiceImplTest {
 
         LocalDateTime  currentTime = LocalDateTime.now();
         generatedOtp.setExpirationTime(currentTime.minusMinutes(30));
+
+        LocalDateTime expirationTime = generatedOtp.getExpirationTime();
+        assertTrue(expirationTime.isBefore(currentTime));
         generateOTPService.deleteExpiredOTPs();
-        assertEquals(1, generateOTPService.countCodeInOTPRepo());
+        assertNull(generateOTPService.countCodeInOTPRepo());
     }
 }
