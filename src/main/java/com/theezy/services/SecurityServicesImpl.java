@@ -33,17 +33,21 @@ public class SecurityServicesImpl implements SecurityService{
     @Autowired
     private VisitorsPassRepo visitorsPassRepo;
 
-    @Autowired
-    private VisitorsPassService visitorsPassService;
-
     @Override
     public GenerateOtpResponse validateOTP(VisitorsPassRequest visitorsPassRequest) {
         GenerateOTP foundCode = findGenerateOTPByOtpCode(visitorsPassRequest.getOtpCode());
-        boolean isSuccessful = foundCode != null && foundCode.getExpirationTime().isBefore(LocalDateTime.now());
+        boolean isExpired = foundCode != null && foundCode.getExpirationTime().isBefore(LocalDateTime.now());
 
-        if (isSuccessful) {
+        if (isExpired) {
             throw new OtpExpiredException("Code Already Expired");
         }
+
+        if (foundCode.isUsed()) {
+            throw new OtpExpiredException("Code has already been used");
+        }
+
+        foundCode.setUsed(Boolean.TRUE);
+        generateOTPRepo.save(foundCode);
 
         VisitorsPass visitorsPass = new VisitorsPass();
         visitorsPass.setName(visitorsPassRequest.getName());
@@ -81,16 +85,10 @@ public class SecurityServicesImpl implements SecurityService{
         return estateSecurityRepository.count();
     }
 
-//    @Override
-//    public VisitorsPass validateForCheckOut(VisitorsPassRequest visitorsPassRequest) {
-//        return visitorsPassService.validateForCheckOut(visitorsPassRequest);
-//    }
-
     private boolean checkIfUserExist(String email){
         return estateSecurityRepository.existsByEmail(email);
     }
     private GenerateOTP findGenerateOTPByOtpCode(String otpCode) {
         return generateOTPRepo.findByOtpCode(otpCode).orElseThrow(()->new OtpExpiredException("Invalid OTP"));
     }
-
 }

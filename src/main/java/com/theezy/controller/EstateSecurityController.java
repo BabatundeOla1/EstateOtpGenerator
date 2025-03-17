@@ -31,12 +31,10 @@ public class EstateSecurityController {
     public EstateSecurityLoginResponse loginEstateSecurity(@RequestBody EstateSecurityLoginRequest estateSecurityLoginRequest){
         return securityService.login(estateSecurityLoginRequest);
     }
-
     @PostMapping("/validateOtp")
     public GenerateOtpResponse validateVisitorOtp(@RequestBody VisitorsPassRequest visitorsPassRequest){
         return securityService.validateOTP(visitorsPassRequest);
     }
-
     @PostMapping("/visitorCheckOut")
     public VisitorsPass validateCheckOutUser(@RequestBody VisitorsPassRequest visitorsPassRequest){
         return visitorsPassService.validateForCheckOut(visitorsPassRequest);

@@ -1,6 +1,7 @@
 package com.theezy.utils;
 
 import com.theezy.data.models.GenerateOTP;
+import com.theezy.data.models.Tenant;
 import com.theezy.data.models.VisitorsPass;
 import com.theezy.dtos.request.GenerateOtpRequest;
 import com.theezy.dtos.response.GenerateOtpResponse;

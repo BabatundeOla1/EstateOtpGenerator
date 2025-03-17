@@ -11,7 +11,5 @@ import java.util.Optional;
 public interface GenerateOTPRepo extends MongoRepository<GenerateOTP, String> {
 
     Optional<GenerateOTP> findByOtpCode(String code);
-//    GenerateOtpResponse findGenerateOTPByOtpCode(String code);
-    void deleteByOtpCode(String otpCode);
     void deleteByExpirationTimeBefore(LocalDateTime expirationTime);
 }
