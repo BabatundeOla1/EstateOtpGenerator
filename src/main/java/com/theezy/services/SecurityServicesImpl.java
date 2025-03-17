@@ -35,6 +35,8 @@ public class SecurityServicesImpl implements SecurityService{
 
     @Override
     public GenerateOtpResponse validateOTP(VisitorsPassRequest visitorsPassRequest) {
+        validateDetails(visitorsPassRequest);
+
         GenerateOTP foundCode = findGenerateOTPByOtpCode(visitorsPassRequest.getOtpCode());
         boolean isExpired = foundCode != null && foundCode.getExpirationTime().isBefore(LocalDateTime.now());
 
@@ -72,6 +74,9 @@ public class SecurityServicesImpl implements SecurityService{
 
     @Override
     public EstateSecurityLoginResponse login(EstateSecurityLoginRequest estateSecurityLoginRequest) {
+
+        validateLoginDetails(estateSecurityLoginRequest);
+
         EstateSecurity foundEstateSecurity = estateSecurityRepository.findByEmail(estateSecurityLoginRequest.getEmail());
         boolean isSuccessful = foundEstateSecurity.getPassword().equals(estateSecurityLoginRequest.getPassword());
         if (!isSuccessful){
@@ -90,5 +95,28 @@ public class SecurityServicesImpl implements SecurityService{
     }
     private GenerateOTP findGenerateOTPByOtpCode(String otpCode) {
         return generateOTPRepo.findByOtpCode(otpCode).orElseThrow(()->new OtpExpiredException("Invalid OTP"));
+    }
+
+    private void validateDetails(VisitorsPassRequest visitorsPassRequest){
+        if (visitorsPassRequest.getOtpCode().isEmpty() || visitorsPassRequest.getOtpCode().isBlank()){
+            throw new IllegalArgumentException("OtpCode can not be Empty");
+        }
+
+        if (visitorsPassRequest.getName().isEmpty() || visitorsPassRequest.getName().isBlank()){
+            throw new IllegalArgumentException("Name can not be Empty");
+        }
+
+        if (visitorsPassRequest.getPhoneNumber().isEmpty() || visitorsPassRequest.getPhoneNumber().isBlank()){
+            throw new IllegalArgumentException("PhoneNumber can not be Empty");
+        }
+    }
+    private void validateLoginDetails(EstateSecurityLoginRequest estateSecurityLoginRequest){
+        if (estateSecurityLoginRequest.getEmail().isEmpty() || estateSecurityLoginRequest.getEmail().isBlank()){
+            throw new IllegalArgumentException("Space can not be Empty");
+        }
+
+        if (estateSecurityLoginRequest.getPassword().isEmpty() || estateSecurityLoginRequest.getPassword().isBlank()){
+            throw new IllegalArgumentException("Space can not be Empty");
+        }
     }
 }

@@ -11,6 +11,7 @@ import com.theezy.dtos.response.EstateSecurityResponse;
 import com.theezy.dtos.response.GenerateOtpResponse;
 import com.theezy.services.SecurityService;
 import com.theezy.services.VisitorsPassService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,11 +25,11 @@ public class EstateSecurityController {
     private VisitorsPassService visitorsPassService;
 
     @PostMapping("/securityRegister")
-    public EstateSecurityResponse createEstateSecurity(@RequestBody EstateSecurityRequest estateSecurityRequest){
+    public EstateSecurityResponse createEstateSecurity(@Valid @RequestBody EstateSecurityRequest estateSecurityRequest){
         return securityService.createAccount(estateSecurityRequest);
     }
     @PostMapping("/securityLogin")
-    public EstateSecurityLoginResponse loginEstateSecurity(@RequestBody EstateSecurityLoginRequest estateSecurityLoginRequest){
+    public EstateSecurityLoginResponse loginEstateSecurity(@Valid @RequestBody EstateSecurityLoginRequest estateSecurityLoginRequest){
         return securityService.login(estateSecurityLoginRequest);
     }
     @PostMapping("/validateOtp")

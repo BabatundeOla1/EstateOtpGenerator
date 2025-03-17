@@ -7,6 +7,7 @@ import com.theezy.dtos.response.GenerateOtpResponse;
 import com.theezy.dtos.response.TenantLoginResponse;
 import com.theezy.dtos.response.TenantResponse;
 import com.theezy.services.TenantServices;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,11 +19,11 @@ public class TenantController {
     private TenantServices tenantService;
 
     @PostMapping("/register")
-    public TenantResponse registerTenant(@RequestBody TenantRequest tenantRequest) {
+    public TenantResponse registerTenant(@Valid @RequestBody TenantRequest tenantRequest) {
         return tenantService.registerTenant(tenantRequest);
     }
     @PostMapping("/login")
-    public TenantLoginResponse tenantLogin(@RequestBody TenantLoginRequest tenantLoginRequest){
+    public TenantLoginResponse tenantLogin(@Valid @RequestBody TenantLoginRequest tenantLoginRequest){
         return tenantService.tenantLogin(tenantLoginRequest);
     }
     @PostMapping("/generateOTP")

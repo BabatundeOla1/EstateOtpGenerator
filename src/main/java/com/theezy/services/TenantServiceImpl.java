@@ -29,6 +29,20 @@ public class TenantServiceImpl implements TenantServices{
 
     @Override
     public TenantResponse registerTenant(TenantRequest tenantRequest) {
+        if (tenantRequest.getName().isEmpty() || tenantRequest.getName().isBlank()){
+            throw new IllegalArgumentException("Space can not be Empty");
+        }
+
+        if (tenantRequest.getRoomId().isEmpty() || tenantRequest.getRoomId().isBlank()){
+            throw new IllegalArgumentException("Space can not be Empty");
+        }
+        if (tenantRequest.getEmail().isEmpty() || tenantRequest.getEmail().isBlank()){
+            throw new IllegalArgumentException("Space can not be Empty");
+        }
+
+        if (tenantRequest.getPassword().isEmpty() || tenantRequest.getPassword().isBlank()){
+            throw new IllegalArgumentException("Space can not be Empty");
+        }
         if (checkIfUserExist(tenantRequest.getEmail())){
             throw new UserAlreadyExistException("Tenant already exist");
         }
@@ -38,6 +52,11 @@ public class TenantServiceImpl implements TenantServices{
     }
     @Override
     public TenantLoginResponse tenantLogin(TenantLoginRequest tenantLoginRequest) {
+
+        if (tenantLoginRequest.getEmail().isEmpty() || tenantLoginRequest.getEmail().isBlank()){
+            throw new IllegalArgumentException("Space can not be Empty");
+        }
+
         Tenant foundTenant = findTenantByEmail(tenantLoginRequest.getEmail());
         boolean isSuccessful = foundTenant.getPassword().equals(tenantLoginRequest.getPassword());
         if (!isSuccessful){
