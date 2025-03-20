@@ -29,20 +29,7 @@ public class TenantServiceImpl implements TenantServices{
 
     @Override
     public TenantResponse registerTenant(TenantRequest tenantRequest) {
-        if (tenantRequest.getName().isEmpty() || tenantRequest.getName().isBlank()){
-            throw new IllegalArgumentException("Space can not be Empty");
-        }
-
-        if (tenantRequest.getRoomId().isEmpty() || tenantRequest.getRoomId().isBlank()){
-            throw new IllegalArgumentException("Space can not be Empty");
-        }
-        if (tenantRequest.getEmail().isEmpty() || tenantRequest.getEmail().isBlank()){
-            throw new IllegalArgumentException("Space can not be Empty");
-        }
-
-        if (tenantRequest.getPassword().isEmpty() || tenantRequest.getPassword().isBlank()){
-            throw new IllegalArgumentException("Space can not be Empty");
-        }
+        validateTenantDetails(tenantRequest);
         if (checkIfUserExist(tenantRequest.getEmail())){
             throw new UserAlreadyExistException("Tenant already exist");
         }
@@ -82,5 +69,22 @@ public class TenantServiceImpl implements TenantServices{
     }
     private boolean checkIfUserExist(String email){
         return tenantRepository.existsTenantByEmail(email);
+    }
+
+    private void validateTenantDetails(TenantRequest tenantRequest){
+        if (tenantRequest.getName().isEmpty() || tenantRequest.getName().isBlank()){
+            throw new IllegalArgumentException("Space can not be Empty");
+        }
+
+        if (tenantRequest.getRoomId().isEmpty() || tenantRequest.getRoomId().isBlank()){
+            throw new IllegalArgumentException("Space can not be Empty");
+        }
+        if (tenantRequest.getEmail().isEmpty() || tenantRequest.getEmail().isBlank()){
+            throw new IllegalArgumentException("Space can not be Empty");
+        }
+
+        if (tenantRequest.getPassword().isEmpty() || tenantRequest.getPassword().isBlank()){
+            throw new IllegalArgumentException("Space can not be Empty");
+        }
     }
 }

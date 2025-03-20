@@ -15,6 +15,4 @@ public interface SecurityService {
 
     EstateSecurityLoginResponse login(EstateSecurityLoginRequest estateSecurityLoginRequest);
     Long getNumberOfSecurityInRepo();
-
-//    VisitorsPass validateForCheckOut(VisitorsPassRequest visitorsPassRequest);
 }

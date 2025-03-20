@@ -15,7 +15,7 @@ public class VisitorsPassServiceImpl implements VisitorsPassService{
     private VisitorsPassRepo visitorsPassRepo;
     @Override
     public VisitorsPass validateForCheckOut(VisitorsPassRequest visitorsPassRequest) {
-        VisitorsPass foundVisitor = visitorsPassRepo.findVisitorsPassByName(visitorsPassRequest.getName())
+        VisitorsPass foundVisitor = visitorsPassRepo.findVisitorsPassByPhoneNumber(visitorsPassRequest.getPhoneNumber())
                 .orElseThrow(()-> new VisitorNotFoundException("Visitor not found"));
 
         foundVisitor.setValid(Boolean.FALSE);

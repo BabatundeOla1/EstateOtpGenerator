@@ -1,5 +1,7 @@
 package com.theezy.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -11,8 +13,10 @@ public class ExceptionHandlers {
     }
 
     @ExceptionHandler(UserAlreadyExistException.class)
-    public String handleUserAlreadyExistException(UserAlreadyExistException e){
-        return e.getMessage();
+    public ResponseEntity<ErrorResponse> handleUserAlreadyExistException(UserAlreadyExistException e){
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+//        return e.getMessage();
     }
 
     @ExceptionHandler(VisitorNotFoundException.class)

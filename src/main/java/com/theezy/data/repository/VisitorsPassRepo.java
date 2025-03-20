@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface VisitorsPassRepo extends MongoRepository<VisitorsPass, String> {
     Optional<VisitorsPass> findVisitorsPassByName(String name);
+    Optional<VisitorsPass> findVisitorsPassByPhoneNumber(String phoneNumber);
 
     boolean existsByName(String name);
 
