@@ -1,15 +1,17 @@
 package com.theezy.controller;
 
 import com.theezy.data.models.GenerateOTP;
+import com.theezy.data.models.Role;
 import com.theezy.dtos.request.TenantLoginRequest;
 import com.theezy.dtos.request.TenantRequest;
-import com.theezy.dtos.response.GenerateOtpResponse;
 import com.theezy.dtos.response.TenantLoginResponse;
 import com.theezy.dtos.response.TenantResponse;
-import com.theezy.exception.UserAlreadyExistException;
 import com.theezy.services.TenantServices;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/tenant/")
@@ -21,15 +23,21 @@ public class TenantController {
     private TenantServices tenantService;
 
     @PostMapping("/register")
-    public TenantResponse registerTenant(@Valid @RequestBody TenantRequest tenantRequest) {
-        return tenantService.registerTenant(tenantRequest);
+    public ResponseEntity<TenantResponse> registerTenant(@Valid @RequestBody TenantRequest tenantRequest) {
+        return new ResponseEntity<>(tenantService.registerTenant(tenantRequest), HttpStatus.OK);
     }
     @PostMapping("/login")
-    public TenantLoginResponse tenantLogin(@Valid @RequestBody TenantLoginRequest tenantLoginRequest){
-        return tenantService.tenantLogin(tenantLoginRequest);
+    public ResponseEntity<TenantLoginResponse> tenantLogin(@Valid @RequestBody TenantLoginRequest tenantLoginRequest){
+        return new ResponseEntity<>(tenantService.tenantLogin(tenantLoginRequest), HttpStatus.OK);
     }
-    @PostMapping("/generateOTP")
-    public GenerateOTP generateOTP(){
-        return tenantService.generateOTP();
+    @GetMapping("/generateOTP")
+    public ResponseEntity<GenerateOTP> generateOTP(){
+        return new ResponseEntity<>(tenantService.generateOTP(), HttpStatus.OK);
+    }
+
+    @GetMapping("/viewAllTenant")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Long> getNumberOfTenants(){
+        return new ResponseEntity<>(tenantService.getNumberOfTenantInRepository(), HttpStatus.OK);
     }
 }

@@ -17,6 +17,7 @@ import com.theezy.exception.UserAlreadyExistException;
 import com.theezy.utils.EstateSecurityLoginMapper;
 import com.theezy.utils.EstateSecurityMapper;
 import com.theezy.utils.GenerateOtpMapper;
+import com.theezy.utils.passwordEncoder.PasswordHashingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,7 +79,7 @@ public class SecurityServicesImpl implements SecurityService{
         validateLoginDetails(estateSecurityLoginRequest);
 
         EstateSecurity foundEstateSecurity = estateSecurityRepository.findByEmail(estateSecurityLoginRequest.getEmail());
-        boolean isSuccessful = foundEstateSecurity.getPassword().equals(estateSecurityLoginRequest.getPassword());
+        boolean isSuccessful = PasswordHashingService.checkPassword(foundEstateSecurity.getPassword(), (estateSecurityLoginRequest.getPassword()));
         if (!isSuccessful){
             throw new IllegalArgumentException("Invalid Password");
         }

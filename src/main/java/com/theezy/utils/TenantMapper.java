@@ -3,6 +3,7 @@ package com.theezy.utils;
 import com.theezy.data.models.Tenant;
 import com.theezy.dtos.request.TenantRequest;
 import com.theezy.dtos.response.TenantResponse;
+import com.theezy.utils.passwordEncoder.PasswordHashingService;
 
 public class TenantMapper {
 
@@ -11,8 +12,7 @@ public class TenantMapper {
         tenant.setName(tenantRequest.getName());
         tenant.setRoomId(tenantRequest.getRoomId());
         tenant.setEmail(tenantRequest.getEmail());
-        tenant.setPassword(tenantRequest.getPassword());
-//        tenant.setGenerateOTP(tenantRequest.getGenerateOTP());
+        tenant.setPassword(PasswordHashingService.hashPassword(tenantRequest.getPassword()));
         return tenant;
     }
 

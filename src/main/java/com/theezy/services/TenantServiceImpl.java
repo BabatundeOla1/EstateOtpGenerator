@@ -1,7 +1,10 @@
 package com.theezy.services;
 
+import com.theezy.data.models.Apartment;
 import com.theezy.data.models.GenerateOTP;
+import com.theezy.data.models.Role;
 import com.theezy.data.models.Tenant;
+import com.theezy.data.repository.ApartmentRepository;
 import com.theezy.data.repository.GenerateOTPRepo;
 import com.theezy.data.repository.TenantRepository;
 import com.theezy.dtos.request.TenantLoginRequest;
@@ -9,9 +12,12 @@ import com.theezy.dtos.request.TenantRequest;
 import com.theezy.dtos.response.GenerateOtpResponse;
 import com.theezy.dtos.response.TenantLoginResponse;
 import com.theezy.dtos.response.TenantResponse;
+import com.theezy.exception.ApartmentNotFoundException;
+import com.theezy.exception.ApartmentOccupiedException;
 import com.theezy.exception.UserAlreadyExistException;
 import com.theezy.utils.TenantLoginMapper;
 import com.theezy.utils.TenantMapper;
+import com.theezy.utils.passwordEncoder.PasswordHashingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,17 +32,39 @@ public class TenantServiceImpl implements TenantServices{
     @Autowired
     private GenerateOTPRepo generateOTPRepo;
 
+    @Autowired
+    private ApartmentRepository apartmentRepository;
 
     @Override
     public TenantResponse registerTenant(TenantRequest tenantRequest) {
         validateTenantDetails(tenantRequest);
+
         if (checkIfUserExist(tenantRequest.getEmail())){
             throw new UserAlreadyExistException("Tenant already exist");
         }
+
+        Apartment myApartment = apartmentRepository.findApartmentByHouseNumber(tenantRequest.getRoomId())
+                .orElseThrow(()-> new ApartmentNotFoundException("Apartment not found or Invalid Apartment number"));
+
+        if (myApartment.isOccupied()){
+            throw new ApartmentOccupiedException("Apartment has been occupied");
+        }
+
         Tenant tenant = TenantMapper.mapTenantToRequest(tenantRequest);
+
+        myApartment.setHouseNumber(tenantRequest.getRoomId());
+        myApartment.setOwnerEmail(tenant.getEmail());
+        myApartment.setOccupied(true);
+
+        tenant.setMyApartment(myApartment);
+        tenant.setRole(Role.TENANT);
         tenantRepository.save(tenant);
+        apartmentRepository.save(myApartment);
+
         return TenantMapper.mapTenantToResponse(tenant);
     }
+
+
     @Override
     public TenantLoginResponse tenantLogin(TenantLoginRequest tenantLoginRequest) {
 
@@ -45,7 +73,8 @@ public class TenantServiceImpl implements TenantServices{
         }
 
         Tenant foundTenant = findTenantByEmail(tenantLoginRequest.getEmail());
-        boolean isSuccessful = foundTenant.getPassword().equals(tenantLoginRequest.getPassword());
+
+        boolean isSuccessful = PasswordHashingService.checkPassword(foundTenant.getPassword(), (tenantLoginRequest.getPassword()));
         if (!isSuccessful){
             throw new IllegalArgumentException("Invalid Password");
         }
@@ -87,4 +116,5 @@ public class TenantServiceImpl implements TenantServices{
             throw new IllegalArgumentException("Space can not be Empty");
         }
     }
+
 }
