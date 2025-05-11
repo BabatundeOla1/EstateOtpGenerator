@@ -30,7 +30,7 @@ public class TenantServiceImpl implements TenantServices{
     private GenerateOTPService generateOTPService;
 
     @Autowired
-    private GenerateOTPRepo generateOTPRepo;
+    private JWTService jwtService;
 
     @Autowired
     private ApartmentRepository apartmentRepository;
@@ -52,7 +52,6 @@ public class TenantServiceImpl implements TenantServices{
 
         Tenant tenant = TenantMapper.mapTenantToRequest(tenantRequest);
 
-        myApartment.setHouseNumber(tenantRequest.getRoomId());
         myApartment.setOwnerEmail(tenant.getEmail());
         myApartment.setOccupied(true);
 
@@ -60,6 +59,8 @@ public class TenantServiceImpl implements TenantServices{
         tenant.setRole(Role.TENANT);
         tenantRepository.save(tenant);
         apartmentRepository.save(myApartment);
+
+        String accessToken = jwtService.generateAccessToken(tenant);
 
         return TenantMapper.mapTenantToResponse(tenant);
     }
@@ -78,7 +79,9 @@ public class TenantServiceImpl implements TenantServices{
         if (!isSuccessful){
             throw new IllegalArgumentException("Invalid Password");
         }
-        return TenantLoginMapper.mapToTenantLoginResponse("Login Successful, OTP Generated");
+        String accessToken = jwtService.generateAccessToken(foundTenant);
+        return TenantLoginMapper.mapToTenantLoginResponse(accessToken,  "Login Successful, OTP Generated");
+//        return TenantLoginMapper.mapToTenantLoginResponse("Login Successful, OTP Generated");
     }
 
     @Override

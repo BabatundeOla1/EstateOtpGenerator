@@ -5,6 +5,7 @@ import com.theezy.data.repository.ApartmentRepository;
 import com.theezy.dtos.request.ApartmentRegisterRequest;
 import com.theezy.dtos.response.ApartmentRegisterResponse;
 import com.theezy.dtos.response.DeleteApartmentResponse;
+import com.theezy.exception.ApartmentAlreadyExistException;
 import com.theezy.exception.ApartmentNotFoundException;
 import com.theezy.utils.ApartmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,16 @@ public class ApartmentServiceImpl implements ApartmentService{
     private ApartmentRepository apartmentRepository;
     @Override
     public ApartmentRegisterResponse registerApartment(ApartmentRegisterRequest apartmentRegisterRequest) {
-        Apartment foundApartment = apartmentRepository.findApartmentByHouseNumber(apartmentRegisterRequest.getHouseNumber())
-                .orElseThrow(()-> new ApartmentNotFoundException("Apartment has been registered"));
+        System.out.println("Received request to create apartment in service: " + apartmentRegisterRequest);
+        boolean existingApartment = apartmentRepository.existsByHouseNumber(apartmentRegisterRequest.getHouseNumber());
 
-        apartmentRepository.save(foundApartment);
-        return ApartmentMapper.mapApartmentToResponse(foundApartment);
+        if (existingApartment){
+            throw new ApartmentAlreadyExistException("Apartment already exist");
+        }
+
+        Apartment registeredApartment = ApartmentMapper.mapRequestToApartment(apartmentRegisterRequest);
+        apartmentRepository.save(registeredApartment);
+        return ApartmentMapper.mapApartmentToResponse(registeredApartment);
     }
 
     @Override

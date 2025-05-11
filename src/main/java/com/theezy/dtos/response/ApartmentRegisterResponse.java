@@ -4,8 +4,6 @@ import lombok.Data;
 
 @Data
 public class ApartmentRegisterResponse {
-
     private boolean status;
-    private Object data;
     private String message;
 }

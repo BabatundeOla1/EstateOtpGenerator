@@ -30,22 +30,19 @@ public class AdminServiceImpl implements AdminService{
     @Override
     public AdminLoginResponse login(AdminLoginRequest adminLoginRequest) {
 
-        System.out.println(adminLoginRequest.getEmail());
-        System.out.println(adminLoginRequest.getPassword());
-
-        Admin foundAmin = adminRepository.findAdminByEmail(adminLoginRequest.getEmail())
+        Admin foundAdmin = adminRepository.findAdminByEmail(adminLoginRequest.getEmail())
                 .orElseThrow(() -> new AdminNotFoundException("Invalid Email"));
 
-        boolean isPasswordCorrect =PasswordHashingService.checkPassword(adminLoginRequest.getPassword(), foundAmin.getPassword() );
+        boolean isPasswordCorrect =PasswordHashingService.checkPassword(adminLoginRequest.getPassword(), foundAdmin.getPassword() );
 
         if (!isPasswordCorrect){
             throw new AdminNotFoundException("Invalid Password");
         }
-        String accessToken = jwtService.generateAccessToken(foundAmin);
-        String refreshToken = jwtService.generateRefreshToken(foundAmin);
+        String accessToken = jwtService.generateAccessToken(foundAdmin);
+        String refreshToken = jwtService.generateRefreshToken(foundAdmin);
 
-//        return AdminLoginMapper.mapLoginRequestToResponse(foundAmin, accessToken, refreshToken);
-        return AdminLoginMapper.mapLoginRequestToResponse(foundAmin);
+        return AdminLoginMapper.mapLoginRequestToResponse(foundAdmin, accessToken, refreshToken);
+//        return AdminLoginMapper.mapLoginRequestToResponse(foundAdmin);
     }
 
     @Override
@@ -56,10 +53,6 @@ public class AdminServiceImpl implements AdminService{
             permanentAdmin.setPassword(PasswordHashingService.hashPassword(adminPassword));
             permanentAdmin.setRole(Role.ADMIN);
             adminRepository.save(permanentAdmin);
-            System.out.println("Permanent admin registered: " + adminEmail);
         }
-//        else {
-//            System.out.println("Permanent admin already exists.");
-//        }
     }
 }

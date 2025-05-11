@@ -12,11 +12,4 @@ public class Main {
         SpringApplication.run(Main.class, args);
     }
 
-    @Bean
-    public CommandLineRunner init(AdminService adminService) {
-        return args -> {
-            adminService.registerAdmin();
-        };
-    }
-
 }

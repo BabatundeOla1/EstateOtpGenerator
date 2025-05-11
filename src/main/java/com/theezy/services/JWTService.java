@@ -35,8 +35,14 @@ public class JWTService {
     }
 
     public String generateRefreshToken(UserDetails userDetails){
-        return generateToken(new HashMap<>(), userDetails, 7 * 24 * 60 * 60 * 1000);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", userDetails.getAuthorities());
+        return generateToken(claims, userDetails, 7 * 24 * 60 * 60 * 1000);
     }
+    public Object extractRoles(String token) {
+        return extractAllClaims(token).get("roles");
+    }
+
 
     public  boolean isTokenValid(String token, UserDetails userDetails){
         final String username = extractUsername(token);
@@ -44,6 +50,7 @@ public class JWTService {
     }
 
     private String generateToken(Map<String, Object> extractClaims, UserDetails userDetails, long expirationTime){
+        extractClaims.put("roles", userDetails.getAuthorities());
         return Jwts.builder()
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
@@ -60,7 +67,7 @@ public class JWTService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    private Claims extractAllClaims(String token){
+    public Claims extractAllClaims(String token){
         return Jwts.parser()
                 .setSigningKey(getSignIngKey())
                 .build()

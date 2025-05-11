@@ -16,9 +16,8 @@ public class ApartmentMapper {
 
     public static ApartmentRegisterResponse mapApartmentToResponse(Apartment apartment){
         ApartmentRegisterResponse apartmentRegisterResponse = new ApartmentRegisterResponse();
-        apartmentRegisterResponse.setMessage("Apartment Registered Successfully");
+        apartmentRegisterResponse.setMessage(apartment.getHouseNumber() + " Apartment Registered Successfully");
         apartmentRegisterResponse.setStatus(true);
-        apartmentRegisterResponse.setData(apartment.getHouseNumber());
         return apartmentRegisterResponse;
     }
 

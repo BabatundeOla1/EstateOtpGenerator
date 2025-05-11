@@ -20,11 +20,7 @@ public class Admin  implements UserDetails, Serializable{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (role == null){
-            throw new IllegalStateException("Role is not set for user");
-        }
-
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override
@@ -34,21 +30,21 @@ public class Admin  implements UserDetails, Serializable{
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

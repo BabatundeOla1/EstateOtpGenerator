@@ -13,18 +13,18 @@ public class AdminLoginMapper {
         admin.setPassword(adminLoginRequest.getPassword());
         return admin;
     }
-//    public static AdminLoginResponse mapLoginRequestToResponse(Admin admin, String accessToken, String refreshToken){
-//        AdminLoginResponse adminLoginResponse = new AdminLoginResponse();
-//        adminLoginResponse.setMessage("Login Successful");
-//        adminLoginResponse.setData(admin.getEmail());
-//        adminLoginResponse.setAccessToken(accessToken);
-//        adminLoginResponse.setRefreshToken(refreshToken);
-//        return adminLoginResponse;
-//    }
-    public static AdminLoginResponse mapLoginRequestToResponse(Admin admin){
+    public static AdminLoginResponse mapLoginRequestToResponse(Admin admin, String accessToken, String refreshToken){
         AdminLoginResponse adminLoginResponse = new AdminLoginResponse();
         adminLoginResponse.setMessage("Login Successful");
         adminLoginResponse.setData(admin.getEmail());
+        adminLoginResponse.setAccessToken(accessToken);
+        adminLoginResponse.setRefreshToken(refreshToken);
         return adminLoginResponse;
     }
+//    public static AdminLoginResponse mapLoginRequestToResponse(Admin admin){
+//        AdminLoginResponse adminLoginResponse = new AdminLoginResponse();
+//        adminLoginResponse.setMessage("Login Successful");
+//        adminLoginResponse.setData(admin.getEmail());
+//        return adminLoginResponse;
+//    }
 }

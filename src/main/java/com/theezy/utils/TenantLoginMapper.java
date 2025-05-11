@@ -12,9 +12,16 @@ public class TenantLoginMapper {
         return tenant;
     }
 
-    public static TenantLoginResponse mapToTenantLoginResponse (String message){
+//    public static TenantLoginResponse mapToTenantLoginResponse (String message){
+//        TenantLoginResponse tenantLoginResponse = new TenantLoginResponse();
+//        tenantLoginResponse.setSuccess(true);
+//        return tenantLoginResponse;
+//    }
+
+    public static TenantLoginResponse mapToTenantLoginResponse(String accessToken, String s) {
         TenantLoginResponse tenantLoginResponse = new TenantLoginResponse();
         tenantLoginResponse.setSuccess(true);
+        tenantLoginResponse.setAccessToken(accessToken);
         return tenantLoginResponse;
     }
 }

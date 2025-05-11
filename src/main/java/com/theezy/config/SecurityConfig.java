@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -20,7 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Autowired
-    private AdminUserDetailsService adminUserDetailsService;
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -36,14 +37,20 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/tenant/register",
                                         "/admin/login",
+                                        "/security/securityLogin",
                                         "/security/securityLogin").permitAll()
-                                .requestMatchers("/security/securityRegister", "/tenant/viewAllTenant").hasRole("ADMIN")
-                                .requestMatchers("/security/securityLogin",
-                                        "/security/visitorCheckOut",
+
+                                .requestMatchers("/security/securityRegister",
+                                        "/tenant/viewAllTenant",
+                                        "/admin/create-apartment").hasRole("ADMIN")
+
+                                .requestMatchers("/security/visitorCheckOut",
                                         "/security/validateOtp").hasRole("SECURITY")
+
                                 .requestMatchers("/tenant/generateOTP").hasRole("TENANT")
+                        .anyRequest().authenticated()
                 )
-                .userDetailsService(adminUserDetailsService);
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
