@@ -35,5 +35,15 @@ public class ExceptionHandlers {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
+    @ExceptionHandler(ApartmentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleApartmentNotFoundException(ApartmentNotFoundException e){
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+    @ExceptionHandler(ApartmentOccupiedException.class)
+    public ResponseEntity<ErrorResponse> handleApartmentOccupiedException(ApartmentOccupiedException e){
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
 
 }

@@ -8,6 +8,7 @@ import com.theezy.dtos.response.DeleteApartmentResponse;
 import com.theezy.exception.ApartmentAlreadyExistException;
 import com.theezy.exception.ApartmentNotFoundException;
 import com.theezy.utils.ApartmentMapper;
+import jdk.jfr.StackTrace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,16 +21,31 @@ public class ApartmentServiceImpl implements ApartmentService{
     private ApartmentRepository apartmentRepository;
     @Override
     public ApartmentRegisterResponse registerApartment(ApartmentRegisterRequest apartmentRegisterRequest) {
-        System.out.println("Received request to create apartment in service: " + apartmentRegisterRequest);
-        boolean existingApartment = apartmentRepository.existsByHouseNumber(apartmentRegisterRequest.getHouseNumber());
+//        System.out.println("Received request to create apartment in service: " + apartmentRegisterRequest);
+        try {
+            boolean existingApartment = apartmentRepository.existsByHouseNumber(apartmentRegisterRequest.getHouseNumber());
 
-        if (existingApartment){
-            throw new ApartmentAlreadyExistException("Apartment already exist");
+            if (existingApartment) {
+                throw new ApartmentAlreadyExistException("Apartment already exist");
+            }
+
+            Apartment registeredApartment = ApartmentMapper.mapRequestToApartment(apartmentRegisterRequest);
+            Apartment savedApartment = apartmentRepository.save(registeredApartment);
+
+            if (savedApartment == null) {
+                throw new RuntimeException("Failed to save apartment");
+            }
+
+//            System.out.println("Saved apartment: " + savedApartment);
+            ApartmentRegisterResponse response = ApartmentMapper.mapApartmentToResponse(savedApartment);
+//            System.out.println("Mapped response: " + response);
+            return response;
+
         }
-
-        Apartment registeredApartment = ApartmentMapper.mapRequestToApartment(apartmentRegisterRequest);
-        apartmentRepository.save(registeredApartment);
-        return ApartmentMapper.mapApartmentToResponse(registeredApartment);
+        catch (Exception e) {
+            System.err.println("Error in registerApartment: " + e.getMessage());
+            throw e;
+        }
     }
 
     @Override

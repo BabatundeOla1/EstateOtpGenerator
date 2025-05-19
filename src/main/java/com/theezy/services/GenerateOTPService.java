@@ -9,5 +9,5 @@ public interface GenerateOTPService {
     void deleteExpiredOTPs();
     Long countCodeInOTPRepo();
 
-    GenerateOTP generateOTP();
+    GenerateOTP  generateOTP();
 }

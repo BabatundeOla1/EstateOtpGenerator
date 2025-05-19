@@ -1,7 +1,5 @@
 package com.theezy.config;
 
-
-import com.theezy.services.AdminUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 @Configuration
 public class SecurityConfig {
-
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
     @Bean
@@ -35,21 +32,25 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/tenant/register",
+                                .requestMatchers(
+                                        "/tenant/register",
+                                        "/tenant/login",
                                         "/admin/login",
+                                        "/tenant/test",
                                         "/security/securityLogin",
-                                        "/security/securityLogin").permitAll()
+                                        "/security/securityLogin",
+                                        "/apartment/admin/create-apartment"
+//                                        "**"
+                                ).permitAll()
 
                                 .requestMatchers("/security/securityRegister",
-                                        "/tenant/viewAllTenant",
-                                        "/admin/create-apartment").hasRole("ADMIN")
+                                        "/tenant/viewAllTenant").hasAnyAuthority("ROLE_ADMIN")
 
                                 .requestMatchers("/security/visitorCheckOut",
-                                        "/security/validateOtp").hasRole("SECURITY")
+                                        "/security/validateOtp").hasAnyAuthority("ROLE_SECURITY")
 
-                                .requestMatchers("/tenant/generateOTP").hasRole("TENANT")
-                        .anyRequest().authenticated()
-                )
+                                .requestMatchers("/tenant/generateOTP").hasAnyAuthority("ROLE_TENANT")
+                        .anyRequest().authenticated())
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

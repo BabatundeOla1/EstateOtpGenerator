@@ -6,4 +6,5 @@ import lombok.Data;
 public class TenantResponse {
     private boolean status;
     private Object data;
+    private String accessToken;
 }

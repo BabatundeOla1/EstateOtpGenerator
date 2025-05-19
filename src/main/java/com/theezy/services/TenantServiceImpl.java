@@ -62,7 +62,8 @@ public class TenantServiceImpl implements TenantServices{
 
         String accessToken = jwtService.generateAccessToken(tenant);
 
-        return TenantMapper.mapTenantToResponse(tenant);
+        return TenantMapper.mapTenantToResponse(tenant, accessToken);
+//        return TenantMapper.mapTenantToResponse(tenant);
     }
 
 
@@ -75,19 +76,17 @@ public class TenantServiceImpl implements TenantServices{
 
         Tenant foundTenant = findTenantByEmail(tenantLoginRequest.getEmail());
 
-        boolean isSuccessful = PasswordHashingService.checkPassword(foundTenant.getPassword(), (tenantLoginRequest.getPassword()));
+        boolean isSuccessful = PasswordHashingService.checkPassword(tenantLoginRequest.getPassword(), (foundTenant.getPassword()));
         if (!isSuccessful){
-            throw new IllegalArgumentException("Invalid Password");
+            throw new IllegalArgumentException("Invalid Credentials");
         }
         String accessToken = jwtService.generateAccessToken(foundTenant);
         return TenantLoginMapper.mapToTenantLoginResponse(accessToken,  "Login Successful, OTP Generated");
-//        return TenantLoginMapper.mapToTenantLoginResponse("Login Successful, OTP Generated");
     }
 
     @Override
     public GenerateOTP generateOTP() {
-        GenerateOTP generateOTP = generateOTPService.generateOTP();
-        return generateOTP;
+        return generateOTPService.generateOTP();
     }
 
 

@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/tenant/")
@@ -31,13 +33,21 @@ public class TenantController {
         return new ResponseEntity<>(tenantService.tenantLogin(tenantLoginRequest), HttpStatus.OK);
     }
     @GetMapping("/generateOTP")
+//    @PreAuthorize("hasRole('TENANT')")
     public ResponseEntity<GenerateOTP> generateOTP(){
         return new ResponseEntity<>(tenantService.generateOTP(), HttpStatus.OK);
     }
 
     @GetMapping("/viewAllTenant")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Long> getNumberOfTenants(){
         return new ResponseEntity<>(tenantService.getNumberOfTenantInRepository(), HttpStatus.OK);
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> testEndpoint() {
+        System.out.println("Test endpoint hit");
+        return ResponseEntity.ok("Hello from test");
+    }
+
 }

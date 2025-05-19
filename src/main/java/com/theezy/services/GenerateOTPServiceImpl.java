@@ -28,8 +28,7 @@ public class GenerateOTPServiceImpl implements GenerateOTPService{
 
         LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(30);
 
-        GenerateOTP generateOTP = createRecords(expirationTime, otp);
-        return  generateOTP;
+        return createRecords(expirationTime, otp);
     }
     @Override
     public Long countCodeInOTPRepo() {

@@ -16,10 +16,11 @@ public class TenantMapper {
         return tenant;
     }
 
-    public static TenantResponse mapTenantToResponse(Tenant tenant){
+    public static TenantResponse mapTenantToResponse(Tenant tenant, String accessToken){
         TenantResponse tenantResponse = new TenantResponse();
         tenantResponse.setData(tenant.getName());
         tenantResponse.setStatus(true);
+        tenantResponse.setAccessToken(accessToken);
         return tenantResponse;
     }
 }

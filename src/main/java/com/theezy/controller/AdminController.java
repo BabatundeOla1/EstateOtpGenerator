@@ -29,11 +29,4 @@ public class AdminController {
     public ResponseEntity<AdminLoginResponse> adminLogin(@RequestBody AdminLoginRequest adminLoginRequest){
         return new ResponseEntity<>(adminService.login(adminLoginRequest), HttpStatus.OK);
     }
-
-    @PostMapping("create-apartment")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApartmentRegisterResponse> createApartment(@RequestBody ApartmentRegisterRequest apartmentRegisterRequest){
-        System.out.println("Received request to create apartment in controller: " + apartmentRegisterRequest);
-        return new ResponseEntity<>(apartmentService.registerApartment(apartmentRegisterRequest), HttpStatus.OK);
-    }
 }

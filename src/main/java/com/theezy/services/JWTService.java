@@ -31,12 +31,12 @@ public class JWTService {
     }
 
     public String generateAccessToken(UserDetails userDetails){
-        return generateToken(new HashMap<>(), userDetails, 10 * 60 * 1000);
+        return generateToken(new HashMap<>(), userDetails, 1 * 24 * 60 * 60 * 1000);
     }
 
     public String generateRefreshToken(UserDetails userDetails){
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", userDetails.getAuthorities());
+        claims.put("roles", userDetails.getAuthorities());
         return generateToken(claims, userDetails, 7 * 24 * 60 * 60 * 1000);
     }
     public Object extractRoles(String token) {

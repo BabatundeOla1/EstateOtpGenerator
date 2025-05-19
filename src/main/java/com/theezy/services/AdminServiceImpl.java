@@ -42,7 +42,6 @@ public class AdminServiceImpl implements AdminService{
         String refreshToken = jwtService.generateRefreshToken(foundAdmin);
 
         return AdminLoginMapper.mapLoginRequestToResponse(foundAdmin, accessToken, refreshToken);
-//        return AdminLoginMapper.mapLoginRequestToResponse(foundAdmin);
     }
 
     @Override
