@@ -21,7 +21,6 @@ public class ApartmentServiceImpl implements ApartmentService{
     private ApartmentRepository apartmentRepository;
     @Override
     public ApartmentRegisterResponse registerApartment(ApartmentRegisterRequest apartmentRegisterRequest) {
-//        System.out.println("Received request to create apartment in service: " + apartmentRegisterRequest);
         try {
             boolean existingApartment = apartmentRepository.existsByHouseNumber(apartmentRegisterRequest.getHouseNumber());
 
@@ -30,15 +29,14 @@ public class ApartmentServiceImpl implements ApartmentService{
             }
 
             Apartment registeredApartment = ApartmentMapper.mapRequestToApartment(apartmentRegisterRequest);
-            Apartment savedApartment = apartmentRepository.save(registeredApartment);
+            apartmentRepository.save(registeredApartment);
+//            Apartment savedApartment = apartmentRepository.save(registeredApartment);
 
-            if (savedApartment == null) {
-                throw new RuntimeException("Failed to save apartment");
-            }
+//            if (savedApartment == null) {
+//                throw new RuntimeException("Failed to save apartment");
+//            }
 
-//            System.out.println("Saved apartment: " + savedApartment);
-            ApartmentRegisterResponse response = ApartmentMapper.mapApartmentToResponse(savedApartment);
-//            System.out.println("Mapped response: " + response);
+            ApartmentRegisterResponse response = ApartmentMapper.mapApartmentToResponse(registeredApartment);
             return response;
 
         }

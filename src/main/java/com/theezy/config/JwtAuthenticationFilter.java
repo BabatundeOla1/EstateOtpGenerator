@@ -45,11 +45,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt;
         final String userEmail;
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")){
-            filterChain.doFilter(request, response);
-            return;
-        }
-        jwt = authHeader.substring(7);
+        jwt = extractToken(request, response, filterChain, authHeader);
+        if (jwt == null) return;
 
         try {
             userEmail = jwtService.extractUsername(jwt);
@@ -68,7 +65,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         }
                     }
                 }
-                System.out.println("JWT Authentication Filter triggered");
 
                 log.info("JWT Subject (Username): {}", claims.getSubject());
                 log.info("JWT Roles: {}", claims.get("roles"));
@@ -103,5 +99,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             """);
         }
+    }
+
+    private static String extractToken(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String authHeader) throws IOException, ServletException {
+        final String jwt;
+        if (authHeader == null || !authHeader.startsWith("Bearer ")){
+            filterChain.doFilter(request, response);
+            return null;
+        }
+        jwt = authHeader.substring(7);
+        return jwt;
     }
 }

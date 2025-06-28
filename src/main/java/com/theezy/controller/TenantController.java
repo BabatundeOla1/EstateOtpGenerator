@@ -33,7 +33,7 @@ public class TenantController {
         return new ResponseEntity<>(tenantService.tenantLogin(tenantLoginRequest), HttpStatus.OK);
     }
     @GetMapping("/generateOTP")
-//    @PreAuthorize("hasRole('TENANT')")
+    @PreAuthorize("hasRole('TENANT')")
     public ResponseEntity<GenerateOTP> generateOTP(){
         return new ResponseEntity<>(tenantService.generateOTP(), HttpStatus.OK);
     }

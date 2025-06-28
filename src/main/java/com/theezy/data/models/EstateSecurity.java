@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
-public class EstateSecurity implements UserDetails, Serializable {
+public class EstateSecurity implements UserDetails {
     @Id
     private String Id;
     private String firstName;
@@ -22,12 +22,12 @@ public class EstateSecurity implements UserDetails, Serializable {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + getRole().name()));
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return getEmail();
     }
 
     @Override

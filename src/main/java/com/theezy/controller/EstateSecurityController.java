@@ -12,9 +12,12 @@ import com.theezy.dtos.response.GenerateOtpResponse;
 import com.theezy.services.SecurityService;
 import com.theezy.services.VisitorsPassService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RequestMapping("/security/")
 @RestController
 public class EstateSecurityController {
@@ -25,8 +28,12 @@ public class EstateSecurityController {
     private VisitorsPassService visitorsPassService;
 
     @PostMapping("/securityRegister")
+    @PreAuthorize("hasRole('ADMIN')")
     public EstateSecurityResponse createEstateSecurity(@Valid @RequestBody EstateSecurityRequest estateSecurityRequest){
-        return securityService.createAccount(estateSecurityRequest);
+        log.info(String.valueOf(estateSecurityRequest));
+        EstateSecurityResponse response = securityService.createAccount(estateSecurityRequest);
+        log.info(String.valueOf(response));
+        return response;
     }
     @PostMapping("/securityLogin")
     public EstateSecurityLoginResponse loginEstateSecurity(@Valid @RequestBody EstateSecurityLoginRequest estateSecurityLoginRequest){

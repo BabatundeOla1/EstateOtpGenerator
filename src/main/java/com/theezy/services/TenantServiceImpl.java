@@ -5,11 +5,10 @@ import com.theezy.data.models.GenerateOTP;
 import com.theezy.data.models.Role;
 import com.theezy.data.models.Tenant;
 import com.theezy.data.repository.ApartmentRepository;
-import com.theezy.data.repository.GenerateOTPRepo;
 import com.theezy.data.repository.TenantRepository;
+import com.theezy.data.repository.UserRepository;
 import com.theezy.dtos.request.TenantLoginRequest;
 import com.theezy.dtos.request.TenantRequest;
-import com.theezy.dtos.response.GenerateOtpResponse;
 import com.theezy.dtos.response.TenantLoginResponse;
 import com.theezy.dtos.response.TenantResponse;
 import com.theezy.exception.ApartmentNotFoundException;
@@ -35,18 +34,21 @@ public class TenantServiceImpl implements TenantServices{
     @Autowired
     private ApartmentRepository apartmentRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public TenantResponse registerTenant(TenantRequest tenantRequest) {
         validateTenantDetails(tenantRequest);
 
-        if (checkIfUserExist(tenantRequest.getEmail())){
+        if (checkIfUserExist(tenantRequest.getEmail())) {
             throw new UserAlreadyExistException("Tenant already exist");
         }
 
         Apartment myApartment = apartmentRepository.findApartmentByHouseNumber(tenantRequest.getRoomId())
-                .orElseThrow(()-> new ApartmentNotFoundException("Apartment not found or Invalid Apartment number"));
+                .orElseThrow(() -> new ApartmentNotFoundException("Apartment not found or Invalid Apartment number"));
 
-        if (myApartment.isOccupied()){
+        if (myApartment.isOccupied()) {
             throw new ApartmentOccupiedException("Apartment has been occupied");
         }
 
@@ -58,12 +60,12 @@ public class TenantServiceImpl implements TenantServices{
         tenant.setMyApartment(myApartment);
         tenant.setRole(Role.TENANT);
         tenantRepository.save(tenant);
+        userRepository.save(tenant);
         apartmentRepository.save(myApartment);
 
         String accessToken = jwtService.generateAccessToken(tenant);
 
         return TenantMapper.mapTenantToResponse(tenant, accessToken);
-//        return TenantMapper.mapTenantToResponse(tenant);
     }
 
 

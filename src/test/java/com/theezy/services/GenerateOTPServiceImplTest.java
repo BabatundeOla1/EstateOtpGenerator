@@ -3,16 +3,12 @@ package com.theezy.services;
 
 import com.theezy.data.models.GenerateOTP;
 import com.theezy.data.repository.GenerateOTPRepo;
-import com.theezy.dtos.response.GenerateOtpResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.time.LocalDateTime;
-
-
 import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
 class GenerateOTPServiceImplTest {
 

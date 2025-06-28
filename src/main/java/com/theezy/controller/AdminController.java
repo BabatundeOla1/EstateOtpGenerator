@@ -29,4 +29,10 @@ public class AdminController {
     public ResponseEntity<AdminLoginResponse> adminLogin(@RequestBody AdminLoginRequest adminLoginRequest){
         return new ResponseEntity<>(adminService.login(adminLoginRequest), HttpStatus.OK);
     }
+
+    @PostMapping("/test-admin")
+    public String testAdmin() {
+        adminService.registerAdmin();
+        return "Admin registration attempted";
+    }
 }

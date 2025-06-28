@@ -3,10 +3,12 @@ package com.theezy.services;
 import com.theezy.data.models.GenerateOTP;
 import com.theezy.data.repository.EstateSecurityRepository;
 import com.theezy.data.repository.GenerateOTPRepo;
+import com.theezy.data.repository.UserRepository;
 import com.theezy.dtos.request.EstateSecurityLoginRequest;
 import com.theezy.dtos.request.EstateSecurityRequest;
 import com.theezy.dtos.request.GenerateOtpRequest;
 import com.theezy.dtos.response.EstateSecurityLoginResponse;
+import com.theezy.dtos.response.EstateSecurityResponse;
 import com.theezy.dtos.response.GenerateOtpResponse;
 import com.theezy.exception.UserAlreadyExistException;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +27,8 @@ class SecurityServicesImplTest {
     private EstateSecurityRepository estateSecurityRepository;
     @Autowired
     private GenerateOTPRepo generateOTPRepo;
+    @Autowired
+    private UserRepository userRepository;
 
     public void setEstateSecurityRegistration(EstateSecurityRequest estateSecurityRequest){
         estateSecurityRequest.setFirstName("Theezy");
@@ -50,8 +54,10 @@ class SecurityServicesImplTest {
     public void testThatEstateSecurityCanRegister(){
         EstateSecurityRequest estateSecurityRequest = new EstateSecurityRequest();
         setEstateSecurityRegistration(estateSecurityRequest);
-        securityService.createAccount(estateSecurityRequest);
+        EstateSecurityResponse response = securityService.createAccount(estateSecurityRequest);
+        System.out.println("from security test: "+response);
         assertEquals(1, securityService.getNumberOfSecurityInRepo());
+        assertEquals(1, userRepository.count());
     }
 
     @Test

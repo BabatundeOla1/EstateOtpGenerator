@@ -2,9 +2,11 @@ package com.theezy.services;
 
 import com.theezy.data.models.EstateSecurity;
 import com.theezy.data.models.GenerateOTP;
+import com.theezy.data.models.Role;
 import com.theezy.data.models.VisitorsPass;
 import com.theezy.data.repository.EstateSecurityRepository;
 import com.theezy.data.repository.GenerateOTPRepo;
+import com.theezy.data.repository.UserRepository;
 import com.theezy.data.repository.VisitorsPassRepo;
 import com.theezy.dtos.request.EstateSecurityLoginRequest;
 import com.theezy.dtos.request.EstateSecurityRequest;
@@ -33,6 +35,8 @@ public class SecurityServicesImpl implements SecurityService{
 
     @Autowired
     private VisitorsPassRepo visitorsPassRepo;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public GenerateOtpResponse validateOTP(VisitorsPassRequest visitorsPassRequest) {
@@ -69,7 +73,10 @@ public class SecurityServicesImpl implements SecurityService{
             throw new UserAlreadyExistException("Security already exist");
         }
         EstateSecurity estateSecurity = EstateSecurityMapper.mapToRequest(estateSecurityRequest);
+        estateSecurity.setRole(Role.SECURITY);
         estateSecurityRepository.save(estateSecurity);
+
+//        userRepository.save(estateSecurity);
         return EstateSecurityMapper.mapToResponse(estateSecurity);
     }
 
@@ -79,7 +86,7 @@ public class SecurityServicesImpl implements SecurityService{
         validateLoginDetails(estateSecurityLoginRequest);
 
         EstateSecurity foundEstateSecurity = estateSecurityRepository.findByEmail(estateSecurityLoginRequest.getEmail());
-        boolean isSuccessful = PasswordHashingService.checkPassword(foundEstateSecurity.getPassword(), (estateSecurityLoginRequest.getPassword()));
+        boolean isSuccessful = PasswordHashingService.checkPassword(estateSecurityLoginRequest.getPassword(), foundEstateSecurity.getPassword());
         if (!isSuccessful){
             throw new IllegalArgumentException("Invalid Password");
         }

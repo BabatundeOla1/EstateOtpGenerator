@@ -1,5 +1,6 @@
 package com.theezy.services;
 
+import com.theezy.data.models.Apartment;
 import com.theezy.data.repository.ApartmentRepository;
 import com.theezy.data.repository.TenantRepository;
 import com.theezy.dtos.request.ApartmentRegisterRequest;
@@ -30,12 +31,20 @@ class ApartmentServiceImplTest {
         tenantRepository.deleteAll();
         apartmentRepository.deleteAll();
     }
+
+    public void setUp(TenantRequest tenant){
+//        tenant.setRoomId("A25");
+        tenant.setName("Babatunde Olaleye");
+        tenant.setEmail("BabatundeOla@gmail.com");
+        tenant.setPassword("Password");
+    }
     public void setTenantUp(TenantRequest tenant, String apartmentNumber){
         tenant.setRoomId(apartmentNumber);
         tenant.setName("Babatunde Olaleye");
         tenant.setEmail("BabatundeOla@gmail.com");
         tenant.setPassword("Password");
     }
+
     public void setUpSecondTenant(TenantRequest tenant, String apartmentNumber){
         tenant.setRoomId(apartmentNumber);
         tenant.setName("Theezy");
